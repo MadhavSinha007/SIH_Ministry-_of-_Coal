@@ -1,1 +1,1 @@
-# SIH_Ministry-_of-_Coal
+# SIH_Ministry_of_Coal
