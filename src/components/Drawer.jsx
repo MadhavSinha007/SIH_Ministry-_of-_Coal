@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -18,6 +19,8 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
 import ArticleIcon from '@mui/icons-material/Article';
+import ReportIcon from '@mui/icons-material/Report';
+import HistoryIcon from '@mui/icons-material/History';
 
 const drawerWidth = 340;
 
@@ -131,7 +134,7 @@ export default function MiniDrawer() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Mini variant drawer
+            Ministry Of Coal
           </Typography>
         </Toolbar>
       </AppBar>
@@ -143,9 +146,11 @@ export default function MiniDrawer() {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Dashboard', 'Shift Log', 'Safety Report', 'History'].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+          {[{name:'Dashboard', icon:<HomeIcon/>, link:'/'}, {name:'Shift Log',icon:<ArticleIcon/>,link:'/shift'}, {name:'Safety Report', icon:<ReportIcon/>,link:'/report'}, {name:'History',icon:<HistoryIcon/>,link:'/history'}].map((page) => (
+            <ListItem key={page.name} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
+                component={Link}
+                to={page.link}
                 sx={[
                   {
                     minHeight: 48,
@@ -175,10 +180,10 @@ export default function MiniDrawer() {
                         },
                   ]}
                 >
-                  {index % 2 === 0 ? <HomeIcon /> : <ArticleIcon />}
+                  {page.icon}
                 </ListItemIcon>
                 <ListItemText
-                  primary={text}
+                  primary={page.name}
                   sx={[
                     open
                       ? {

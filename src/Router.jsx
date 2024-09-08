@@ -2,7 +2,9 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Drawer from "./components/Drawer";
 import HomePage from "./pages/HomePage";
-import PostShift from "./pages/PostShift"
+import ShiftPage from "./pages/ShiftPage"
+import Safety from "./pages/Safety";
+import History from "./pages/History";
 
 const Router = () => {
   return (
@@ -10,7 +12,9 @@ const Router = () => {
      <Drawer />
       <Routes>
         <Route index element={<HomePage />} />
-        <Route path="/postshift" element={<PostShift />} />
+        <Route path="/shift" element={<ShiftPage />} />
+        <Route path="/report" element={<Safety />} />
+        <Route path="/history" element={<History />} />
       </Routes>
     </BrowserRouter>
   );
