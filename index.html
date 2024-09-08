@@ -2,73 +2,12 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        padding: 20px;
-      }
-
-      .input {
-        width: 200px;
-        padding: 10px;
-        margin: 10px 0;
-        display: block;
-        border-radius: 4px;
-      }
-
-      button {
-        background-color: black;
-        color: white;
-        width: 100px;
-        padding: 10px;
-        border: none;
-        cursor: pointer;
-        border-radius:3px;
-      }
-
-      .error-message {
-        color: red;
-        display: none; /* Hidden by default */
-      }
-
-      .forgot-password,
-      .register-section {
-        margin-top: 10px;
-      }
-    </style>
-    <title>Safety and Productivity of Coal Mines</title>
+    <title>Vite + React</title>
   </head>
   <body>
-    <h1>Welcome Back</h1>
-    <div class="mainn">
-      <input type="text" placeholder="username" class="input" id="username">
-      <input type="password" placeholder="password" class="input" id="password">
-      <button onclick="login()">Login</button>
-      
-      <p class="forgot-password">Forgot Password?</p>
-      <div class="register-section">
-        <input type="text" placeholder="Register" class="input" id="register">
-      </div>
-      
-      <p class="error-message" id="error-msg">Incorrect Username/Password</p>
-    </div>
-
-    <script>
-      function login() {
-        // Get input values
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        const errorMsg = document.getElementById('error-msg');
-
-        // Example check for correct username/password
-        if (username === 'admin' && password === '1234') {
-          alert('Login successful!');
-          errorMsg.style.display = 'none'; // Hide error message on success
-        } else {
-          errorMsg.style.display = 'block'; // Show error message on failure
-        }
-      }
-    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

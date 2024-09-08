@@ -147,7 +147,7 @@ export default function MiniDrawer() {
         </DrawerHeader>
         <Divider />
         <List>
-          {[{name:'Dashboard', icon:<HomeIcon/>, link:'/'}, {name:'Shift Log',icon:<ArticleIcon/>,link:'/shift'}, {name:'Safety Report', icon:<ReportIcon/>,link:'/report'}, {name:'History',icon:<HistoryIcon/>,link:'/history'}].map((page) => (
+          {[{name:'Dashboard', icon:<HomeIcon/>, link:'/dashboard'}, {name:'Shift Log',icon:<ArticleIcon/>,link:'/shift'}, {name:'Safety Report', icon:<ReportIcon/>,link:'/report'}, {name:'History',icon:<HistoryIcon/>,link:'/history'}].map((page) => (
             <ListItem key={page.name} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 component={Link}
