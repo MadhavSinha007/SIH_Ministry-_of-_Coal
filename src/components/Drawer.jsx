@@ -21,6 +21,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import ArticleIcon from '@mui/icons-material/Article';
 import ReportIcon from '@mui/icons-material/Report';
 import HistoryIcon from '@mui/icons-material/History';
+import { Height } from '@mui/icons-material';
 
 const drawerWidth = 340;
 

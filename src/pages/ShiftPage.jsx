@@ -1,7 +1,11 @@
+import React from 'react';
+import LogEntryForm from './LogEntryForm';
+
 const ShiftPage = () => {
-    return(
+    return (
         <>
-            <h1>This Wil Be The Shift Page</h1>
+            <h1>Le Madharchod Form</h1>
+            <LogEntryForm />
         </>
     );
 }
