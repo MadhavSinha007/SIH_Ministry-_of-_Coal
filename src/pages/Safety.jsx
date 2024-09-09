@@ -3,7 +3,7 @@ import MineSafetyCheck from "../components/MineSafetyCheck";
 const Safety = () => {
     return(
         <>
-            <h1>This Wil Be The Safety Page</h1>
+            <h1>Safety Measure </h1>
             <MineSafetyCheck/>
         </>
     );

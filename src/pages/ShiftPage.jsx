@@ -4,7 +4,7 @@ import LogEntryForm from '../components/LogEntryForm';
 const ShiftPage = () => {
     return (
         <>
-            <h1>Enter your Shift Details</h1>
+            <h1>Enter Shift Details</h1>
             <LogEntryForm />
         </>
     );
