@@ -1,0 +1,16 @@
+### Save Log Entry
+POST http://localhost:8081/save
+Content-Type: application/json
+
+{
+  "date": "2024-09-09",
+  "shiftNumber": 1,
+  "entryTime": "08:00",
+  "exitTime": "17:00",
+  "issues": "No issues encountered.",
+  "remarks": "All tasks completed successfully.",
+  "selectedEmployees": ["Employee 1", "Employee 2"]
+}
+
+### Generate PDF
+GET http://localhost:8081/print
