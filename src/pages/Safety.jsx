@@ -1,5 +1,6 @@
 import MineSafetyCheck from "../components/MineSafetyCheck";
 
+
 const Safety = () => {
     return(
         <>
