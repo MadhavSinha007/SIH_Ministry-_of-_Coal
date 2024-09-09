@@ -13,4 +13,4 @@ Content-Type: application/json
 }
 
 ### Generate PDF
-GET http://localhost:8081/print
+GET http://localhost:8081/api/print

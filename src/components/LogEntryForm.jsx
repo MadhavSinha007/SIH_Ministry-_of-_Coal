@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, TextareaAutosize, MenuItem, Select, FormControl, InputLabel, Checkbox, FormControlLabel, Button, Typography, Box, Snackbar, Alert } from '@mui/material';
+import { TextField, MenuItem, Select, FormControl, InputLabel, Checkbox, FormControlLabel, Button, Typography, Box, Snackbar, Alert } from '@mui/material';
 import { saveLog, printLog } from '../axios';
 
 const ShiftLogForm = () => {
@@ -14,6 +14,8 @@ const ShiftLogForm = () => {
     selectedEmployees: []
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
   const employees = [
     { name: 'Employee 1', id: '001' },
@@ -39,13 +41,36 @@ const ShiftLogForm = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await saveLog(logEntry);
-    setSnackbarOpen(true); // Show the Snackbar on successful submission
+    try {
+      await saveLog(logEntry);
+      setSnackbarMessage('Log entry submitted successfully!');
+      setSnackbarSeverity('success');
+    } catch (error) {
+      setSnackbarMessage('Failed to submit log entry.');
+      setSnackbarSeverity('error');
+    }
+    setSnackbarOpen(true);
   };
 
   const handlePrint = async () => {
-    await printLog();
+    try {
+      const response = await printLog(); // Ensure this function fetches the PDF correctly
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'log-entries.pdf');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url); // Clean up the URL object
+    } catch (error) {
+      setSnackbarMessage('Failed to fetch log entries.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+    }
   };
+  
 
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
@@ -121,7 +146,7 @@ const ShiftLogForm = () => {
             {employees.map((employee) => (
               <MenuItem key={employee.id} value={employee.name}>
                 <FormControlLabel
-                  control={<Checkbox checked={selectedEmployees.indexOf(employee.name) > -1} />}
+                  control={<Checkbox checked={selectedEmployees.includes(employee.name)} />}
                   label={`${employee.name} (ID: ${employee.id})`}
                 />
               </MenuItem>
@@ -140,8 +165,8 @@ const ShiftLogForm = () => {
         autoHideDuration={6000}
         onClose={handleCloseSnackbar}
       >
-        <Alert onClose={handleCloseSnackbar} severity="success">
-          Submitted successfully!
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
+          {snackbarMessage}
         </Alert>
       </Snackbar>
     </Box>
