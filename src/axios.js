@@ -1,34 +1,24 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8081',
+  baseURL: 'http://localhost:8081/api', 
+  responseType: 'arraybuffer' // Add this to handle binary data
 });
 
-const saveLog = async (logEntry) => {
+export const saveLog = async (logEntry) => {
   try {
     const response = await api.post('/save', logEntry);
-    console.log('Save Response:', response.data);
+    console.log(response.data);
   } catch (error) {
     console.error('Error saving log entry:', error);
   }
 };
 
-const printLog = async () => {
+export const printLog = async () => {
   try {
-    const response = await api.get('/print', { responseType: 'blob' });
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', 'log-entries.pdf');
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+    const response = await api.get('/print');
+    return response; // Return the response to handle in the component
   } catch (error) {
     console.error('Error fetching log entries:', error);
   }
 };
-
-export{
-  saveLog,
-  printLog,
-}
