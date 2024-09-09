@@ -22,6 +22,7 @@ import ArticleIcon from '@mui/icons-material/Article';
 import ReportIcon from '@mui/icons-material/Report';
 import HistoryIcon from '@mui/icons-material/History';
 import { Height } from '@mui/icons-material';
+import { color } from 'chart.js/helpers';
 
 const drawerWidth = 340;
 
@@ -118,7 +119,7 @@ export default function MiniDrawer() {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      <AppBar position="fixed" open={open} style={{background: "#333333", padding:"5px"}}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -134,6 +135,7 @@ export default function MiniDrawer() {
           >
             <MenuIcon />
           </IconButton>
+          <img src='src\assets\wp7870042 1.png' style={{width:"42px", height:"60px", marginRight:"1%",}}></img>
           <Typography variant="h6" noWrap component="div">
             Ministry Of Coal
           </Typography>
