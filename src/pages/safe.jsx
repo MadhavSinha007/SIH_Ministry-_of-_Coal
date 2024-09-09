@@ -6,7 +6,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 export default function IndeterminateCheckbox() {
   const [checked, setChecked] = React.useState([true, false]);
 
-  const handleChange1 = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange1 = (event) => {
     setChecked([event.target.checked, event.target.checked]);
   };
 
