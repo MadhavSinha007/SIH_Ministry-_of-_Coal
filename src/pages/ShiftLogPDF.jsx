@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography, Button, Grid, Checkbox, FormControlLabel } from '@mui/material';
+import { Box, Typography, Button, Grid } from '@mui/material';
 import { PDFDownloadLink, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 
 const styles = StyleSheet.create({
@@ -41,7 +41,7 @@ const ShiftLogHistory = () => {
   ];
 
   const handleShiftSelection = (number) => {
-    setSelectedShift(number);
+    setSelectedShift(selectedShift === number ? null : number);
   };
 
   const filteredShifts = selectedShift 
@@ -56,19 +56,18 @@ const ShiftLogHistory = () => {
       <Grid container spacing={2}>
         {shifts.map((shift) => (
           <Grid item xs={12} sm={6} md={4} key={shift.number}>
-            <Box p={2} border={1} borderColor="grey.300" borderRadius={2}>
+            <Box
+              p={2}
+              border={1}
+              borderColor="grey.300"
+              borderRadius={2}
+              bgcolor={selectedShift === shift.number ? 'lightblue' : 'inherit'}
+              onClick={() => handleShiftSelection(shift.number)}
+              style={{ cursor: 'pointer' }}
+            >
               <Typography variant="h6">Shift Number: {shift.number}</Typography>
               <Typography>Manager Name: {shift.manager}</Typography>
               <Typography>Signature: {shift.signature}</Typography>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={selectedShift === shift.number}
-                    onChange={() => handleShiftSelection(shift.number)}
-                  />
-                }
-                label="Select"
-              />
             </Box>
           </Grid>
         ))}
@@ -91,3 +90,4 @@ const ShiftLogHistory = () => {
 };
 
 export default ShiftLogHistory;
+
