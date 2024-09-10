@@ -70,7 +70,6 @@ const ShiftLogForm = () => {
       setSnackbarOpen(true);
     }
   };
-  
 
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
@@ -156,7 +155,21 @@ const ShiftLogForm = () => {
         <Button variant="contained" color="primary" type="submit">
           Submit
         </Button>
-        <Button variant="contained" color="secondary" onClick={handlePrint}>
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: '#C4283C',
+            '&:hover': {
+              backgroundColor: '#A32C33',
+              boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+              transform: 'scale(1.05)',
+              transition: 'background-color 0.3s, box-shadow 0.3s, transform 0.3s',
+            },
+            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+            transition: 'background-color 0.3s, box-shadow 0.3s, transform 0.3s',
+          }}
+          onClick={handlePrint}
+        >
           Print
         </Button>
       </Box>

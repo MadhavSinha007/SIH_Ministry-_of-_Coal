@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { TextField, Button, Typography, Container, Grid, Paper, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import './MineSafetyCheck.css'; // Import the CSS file
 
+
+
+
 // Safety Page Component
 const Safety = () => {
     return (

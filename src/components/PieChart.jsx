@@ -8,7 +8,7 @@ import {
   } from "recharts";
   
   export const PieChart = ({ data, title }) => {
-    const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+    const COLORS = ["#2ADEF6", "#C4273C", "#97F66A"];
   
     return (
       <div className="bg-white rounded-lg shadow-md p-4 w-full md:w-[48%] lg:w-fit">
