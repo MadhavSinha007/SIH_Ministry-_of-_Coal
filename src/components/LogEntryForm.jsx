@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { TextField, MenuItem, Select, FormControl, InputLabel, Checkbox, FormControlLabel, Button, Typography, Box, Snackbar, Alert } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import { saveLog, printLog } from '../axios';
 
 const ShiftLogForm = () => {
@@ -17,10 +18,12 @@ const ShiftLogForm = () => {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
+  const navigate = useNavigate();
+
   const employees = [
-    { name: 'Employee 1', id: '001' },
-    { name: 'Employee 2', id: '002' },
-    { name: 'Employee 3', id: '003' },
+    { name: 'Employee 1', id: '001', img: 'https://via.placeholder.com/50' },
+    { name: 'Employee 2', id: '002', img: 'https://via.placeholder.com/50' },
+    { name: 'Employee 3', id: '003', img: 'https://via.placeholder.com/50' },
   ];
 
   const handleSelectChange = (event) => {
@@ -73,6 +76,10 @@ const ShiftLogForm = () => {
 
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
+  };
+
+  const handleEmployeeClick = (id) => {
+    navigate(`/employee/${id}`);
   };
 
   return (
@@ -144,10 +151,19 @@ const ShiftLogForm = () => {
           >
             {employees.map((employee) => (
               <MenuItem key={employee.id} value={employee.name}>
-                <FormControlLabel
-                  control={<Checkbox checked={selectedEmployees.includes(employee.name)} />}
-                  label={`${employee.name} (ID: ${employee.id})`}
-                />
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <img
+                    src={employee.img}
+                    alt={employee.name}
+                    style={{ width: 50, height: 50, borderRadius: '50%', cursor: 'pointer' }}
+                    onClick={() => handleEmployeeClick(employee.id)}
+                  />
+                  <FormControlLabel
+                    control={<Checkbox checked={selectedEmployees.includes(employee.name)} />}
+                    label={`${employee.name} (ID: ${employee.id})`}
+                    sx={{ ml: 'auto' }}
+                  />
+                </Box>
               </MenuItem>
             ))}
           </Select>

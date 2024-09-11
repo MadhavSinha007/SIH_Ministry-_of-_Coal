@@ -1,26 +1,68 @@
 import React, { useState } from 'react';
 import { TextField, Button, Typography, Container, Grid, Paper, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import './MineSafetyCheck.css'; // Import the CSS file
 
-
-
+const useStyles = makeStyles({
+    buttonGroup: {
+        margin: '16px 0',
+    },
+    paper: {
+        padding: '16px',
+    },
+    result: {
+        marginTop: '16px',
+    },
+    formControl: {
+        marginTop: '16px',
+    },
+    formField: {
+        margin: '16px 0',
+    },
+    safetyButton: {
+        marginRight: '8px',
+    },
+});
 
 // Safety Page Component
-const Safety = () => {
-    return (
-        <Container>
-            <Typography variant="h4" gutterBottom>
-                This Will Be The Safety Page
-            </Typography>
-            <Typography variant="body1" style={{ marginTop: '16px' }}>
-                <span className="red-asterisk-span">*</span> Ensure all safety checks are completed accurately.
-            </Typography>
-        </Container>
-    );
-};
+const Safety = () => (
+    <Container>
+        <Typography variant="h4" gutterBottom>
+            This Will Be The Safety Page
+        </Typography>
+        <Typography variant="body1" style={{ marginTop: '16px' }}>
+            <span className="red-asterisk-span">*</span> Ensure all safety checks are completed accurately.
+        </Typography>
+    </Container>
+);
+
+// CheckForm Component
+const CheckForm = ({ type, checks, onChange }) => (
+    <Grid container spacing={3} style={{ marginTop: '16px' }}>
+        <Grid item xs={12}>
+            <Paper elevation={3} style={{ padding: '16px' }}>
+                <Typography variant="h6">{type === 'preshift' ? 'Before Checks' : 'After Checks'}</Typography>
+                {Object.keys(checks).map((key) => (
+                    <TextField
+                        key={key}
+                        label={`${key.charAt(0).toUpperCase() + key.slice(1)} Levels`}
+                        name={key}
+                        value={checks[key]}
+                        onChange={(e) => onChange(e, type)}
+                        fullWidth
+                        margin="normal"
+                        required
+                        className={useStyles().formField}
+                    />
+                ))}
+            </Paper>
+        </Grid>
+    </Grid>
+);
 
 // Mine Safety Check Component
 const MineSafetyCheck = () => {
+    const classes = useStyles();
     const [shiftNumber, setShiftNumber] = useState('');
     const [checkType, setCheckType] = useState('');
     const [beforeChecks, setBeforeChecks] = useState({
@@ -44,9 +86,9 @@ const MineSafetyCheck = () => {
     const handleChange = (e, type) => {
         const { name, value } = e.target;
         if (type === 'before') {
-            setBeforeChecks({ ...beforeChecks, [name]: value });
+            setBeforeChecks((prev) => ({ ...prev, [name]: value }));
         } else {
-            setAfterChecks({ ...afterChecks, [name]: value });
+            setAfterChecks((prev) => ({ ...prev, [name]: value }));
         }
     };
 
@@ -58,11 +100,7 @@ const MineSafetyCheck = () => {
         if (beforeChecks.ventilation !== afterChecks.ventilation) issues.push('Ventilation issues');
         if (beforeChecks.structuralIntegrity !== afterChecks.structuralIntegrity) issues.push('Structural Integrity issues');
 
-        if (issues.length > 0) {
-            setResult(`Not safe to enter the mine. Issues: ${issues.join(', ')}`);
-        } else {
-            setResult('Safe to enter the mine.');
-        }
+        setResult(issues.length > 0 ? `Not safe to enter the mine. Issues: ${issues.join(', ')}` : 'Safe to enter the mine.');
     };
 
     return (
@@ -70,7 +108,7 @@ const MineSafetyCheck = () => {
             <Typography variant="h4" gutterBottom>
                 Mine Safety Check
             </Typography>
-            <FormControl fullWidth margin="normal">
+            <FormControl fullWidth margin="normal" className={classes.formControl}>
                 <InputLabel id="shift-number-label">Shift Number</InputLabel>
                 <Select
                     labelId="shift-number-label"
@@ -84,8 +122,8 @@ const MineSafetyCheck = () => {
                 </Select>
             </FormControl>
             {shiftNumber && (
-                <div>
-                    <Button variant="contained" color="primary" onClick={() => setCheckType('preshift')} style={{ marginRight: '8px' }}>
+                <div className={classes.buttonGroup}>
+                    <Button variant="contained" color="primary" onClick={() => setCheckType('preshift')} className={classes.safetyButton}>
                         Preshift
                     </Button>
                     <Button variant="contained" color="secondary" onClick={() => setCheckType('postshift')}>
@@ -93,119 +131,12 @@ const MineSafetyCheck = () => {
                     </Button>
                 </div>
             )}
-            {checkType === 'preshift' && (
-                <Grid container spacing={3} style={{ marginTop: '16px' }}>
-                    <Grid item xs={12}>
-                        <Paper elevation={3} style={{ padding: '16px' }}>
-                            <Typography variant="h6">Before Checks</Typography>
-                            <TextField
-                                label="Oxygen Levels"
-                                name="oxygen"
-                                value={beforeChecks.oxygen}
-                                onChange={(e) => handleChange(e, 'before')}
-                                fullWidth
-                                margin="normal"
-                                required
-                            />
-                            <TextField
-                                label="Methane Levels"
-                                name="methane"
-                                value={beforeChecks.methane}
-                                onChange={(e) => handleChange(e, 'before')}
-                                fullWidth
-                                margin="normal"
-                                required
-                            />
-                            <TextField
-                                label="Carbon Monoxide Levels"
-                                name="carbonMonoxide"
-                                value={beforeChecks.carbonMonoxide}
-                                onChange={(e) => handleChange(e, 'before')}
-                                fullWidth
-                                margin="normal"
-                                required
-                            />
-                            <TextField
-                                label="Ventilation"
-                                name="ventilation"
-                                value={beforeChecks.ventilation}
-                                onChange={(e) => handleChange(e, 'before')}
-                                fullWidth
-                                margin="normal"
-                                required
-                            />
-                            <TextField
-                                label="Structural Integrity"
-                                name="structuralIntegrity"
-                                value={beforeChecks.structuralIntegrity}
-                                onChange={(e) => handleChange(e, 'before')}
-                                fullWidth
-                                margin="normal"
-                                required
-                            />
-                        </Paper>
-                    </Grid>
-                </Grid>
-            )}
-            {checkType === 'postshift' && (
-                <Grid container spacing={3} style={{ marginTop: '16px' }}>
-                    <Grid item xs={12}>
-                        <Paper elevation={3} style={{ padding: '16px' }}>
-                            <Typography variant="h6">After Checks</Typography>
-                            <TextField
-                                label="Oxygen Levels"
-                                name="oxygen"
-                                value={afterChecks.oxygen}
-                                onChange={(e) => handleChange(e, 'after')}
-                                fullWidth
-                                margin="normal"
-                                required
-                            />
-                            <TextField
-                                label="Methane Levels"
-                                name="methane"
-                                value={afterChecks.methane}
-                                onChange={(e) => handleChange(e, 'after')}
-                                fullWidth
-                                margin="normal"
-                                required
-                            />
-                            <TextField
-                                label="Carbon Monoxide Levels"
-                                name="carbonMonoxide"
-                                value={afterChecks.carbonMonoxide}
-                                onChange={(e) => handleChange(e, 'after')}
-                                fullWidth
-                                margin="normal"
-                                required
-                            />
-                            <TextField
-                                label="Ventilation"
-                                name="ventilation"
-                                value={afterChecks.ventilation}
-                                onChange={(e) => handleChange(e, 'after')}
-                                fullWidth
-                                margin="normal"
-                                required
-                            />
-                            <TextField
-                                label="Structural Integrity"
-                                name="structuralIntegrity"
-                                value={afterChecks.structuralIntegrity}
-                                onChange={(e) => handleChange(e, 'after')}
-                                fullWidth
-                                margin="normal"
-                                required
-                            />
-                        </Paper>
-                    </Grid>
-                </Grid>
-            )}
+            {checkType && <CheckForm type={checkType} checks={checkType === 'preshift' ? beforeChecks : afterChecks} onChange={handleChange} />}
             <Button variant="contained" color="primary" onClick={handleSubmit} style={{ marginTop: '16px' }}>
                 Submit
             </Button>
             {result && (
-                <Typography variant="h6" color="error" style={{ marginTop: '16px' }}>
+                <Typography variant="h6" color="error" className={classes.result}>
                     {result}
                 </Typography>
             )}
