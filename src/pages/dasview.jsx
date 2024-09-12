@@ -53,8 +53,8 @@ const StudentOperations = () => {
         overflow: 'hidden',
       }}
     >
-      <Typography variant="h4" component="h1" align="center" gutterBottom sx={{ color: '#fff' }}>
-        Student Operations
+      <Typography variant="h4" component="h1" align="center" gutterBottom sx={{ color: '#000' }}>
+        Visual Details
       </Typography>
       <Grid container spacing={4}>
         <Grid item xs={12} sm={6} md={6}>
