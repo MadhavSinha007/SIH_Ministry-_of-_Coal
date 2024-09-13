@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { TextField, Button, Typography, Container, Grid, Paper, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import './MineSafetyCheck.css'; // Import the CSS file
-
 const useStyles = makeStyles({
     buttonGroup: {
         margin: '16px 0',

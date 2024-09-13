@@ -1,16 +1,40 @@
-### Save Log Entry
-POST http://localhost:8081/save
+### Test Save Clock-In Entry
+POST http://localhost:8081/api/save
 Content-Type: application/json
 
 {
-  "date": "2024-09-09",
-  "shiftNumber": 1,
-  "entryTime": "08:00",
-  "exitTime": "17:00",
-  "issues": "No issues encountered.",
-  "remarks": "All tasks completed successfully.",
-  "selectedEmployees": ["Employee 1", "Employee 2"]
+  "date": "2024-09-15",
+  "shiftNumber": "Shift 1",
+  "time": "08:00:00",
+  "issues": "None",
+  "remarks": "No issues",
+  "oxygen": 20.5,
+  "methane": 15.2,
+  "monoxide": 5.0,
+  "ventilation": 10.0,
+  "integrity": 9.5,
+  "selectedEmployees": ["Employee1", "Employee2"],
+  "logType": "clock_in"
 }
 
-### Generate PDF
-GET http://localhost:8081/api/print
+### Test Save Clock-Out Entry
+POST http://localhost:8081/api/save
+Content-Type: application/json
+
+{
+  "date": "2024-09-15",
+  "shiftNumber": "Shift 1",
+  "time": "16:00:00",
+  "issues": "None",
+  "remarks": "All good",
+  "oxygen": 18.0,
+  "methane": 12.0,
+  "monoxide": 4.5,
+  "ventilation": 12.0,
+  "integrity": 9.0,
+  "selectedEmployees": ["Employee1", "Employee2"],
+  "logType": "clock_out"
+}
+
+### Test Print Log Entries (PDF)
+GET http://localhost:8081/api/print/Shift 1

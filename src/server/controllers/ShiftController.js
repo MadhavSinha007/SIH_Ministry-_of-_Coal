@@ -1,52 +1,84 @@
-import { saveLog, getLatestLog } from '../models/ShiftModel.js';
 import PDFDocument from 'pdfkit';
+import { saveShiftLog, getLatestShiftLog } from '../models/ShiftModel.js'; // Adjust path as necessary
 
-const saveLogEntry = async (req, res) => {
+// Function to save or update a shift log entry
+export const saveLogEntry = async (req, res) => {
   try {
     const logData = req.body;
-    const log = await saveLog(logData);
-    res.status(200).json({ message: 'Log entry saved successfully', log });
+    const savedLog = await saveShiftLog(logData);
+    res.status(200).json(savedLog);
   } catch (error) {
-    console.error('Error saving log entry:', error);
-    res.status(500).json({ error: 'Failed to save log entry' });
+    res.status(500).json({ error: 'Error saving or updating shift log entry' });
   }
 };
 
-const printLogEntries = async (req, res) => {
+// Function to print log entries as a PDF
+export const printLogEntries = async (req, res) => {
+  const { shiftNumber } = req.params;
+  
   try {
-    const logEntry = await getLatestLog();
+    const clockInLog = await getLatestShiftLog(shiftNumber, 'clock_in');
+    const clockOutLog = await getLatestShiftLog(shiftNumber, 'clock_out');
 
-    if (!logEntry) {
-      return res.status(404).json({ error: 'No log entries found' });
-    }
-
+    // Create a new PDF document
     const doc = new PDFDocument();
-    let filename = 'log-entries.pdf';
-    filename = encodeURIComponent(filename);
-
+    const filename = `Shift_${shiftNumber}_Report.pdf`;
     res.setHeader('Content-disposition', `attachment; filename="${filename}"`);
     res.setHeader('Content-type', 'application/pdf');
 
     doc.pipe(res);
 
-    doc.fontSize(20).text('Log Entries', { align: 'center' });
+    // Title
+    doc.fontSize(20).text(`Shift Report for Shift Number: ${shiftNumber}`, { align: 'center' });
     doc.moveDown();
 
-    doc.fontSize(14).text('Latest Log Entry', { underline: true });
-    doc.fontSize(12).text(`Date: ${logEntry.date}`);
-    doc.fontSize(12).text(`Shift Number: ${logEntry.shiftnumber}`);
-    doc.fontSize(12).text(`Entry Time: ${logEntry.entrytime}`);
-    doc.fontSize(12).text(`Exit Time: ${logEntry.exittime}`);
-    doc.fontSize(12).text(`Issues Encountered: ${logEntry.issues}`);
-    doc.fontSize(12).text(`Remarks: ${logEntry.remarks}`);
-    doc.fontSize(12).text(`Employee Attendance: ${logEntry.selectedemployees.join(', ')}`);
+    // Clock-in Section
+    doc.fontSize(16).text('Clock-In Details', { underline: true });
     doc.moveDown();
+
+    if (clockInLog) {
+      doc.fontSize(12)
+        .text(`Date: ${clockInLog.date}`)
+        .text(`Shift Number: ${clockInLog.shiftNumber}`)
+        .text(`Entry Time: ${clockInLog.time}`)
+        .text(`Issues: ${clockInLog.issues || 'None'}`)
+        .text(`Remarks: ${clockInLog.remarks || 'None'}`)
+        .text(`Oxygen: ${clockInLog.oxygen || 'N/A'}`)
+        .text(`Methane: ${clockInLog.methane || 'N/A'}`)
+        .text(`Monoxide: ${clockInLog.monoxide || 'N/A'}`)
+        .text(`Ventilation: ${clockInLog.ventilation || 'N/A'}`)
+        .text(`Integrity: ${clockInLog.integrity || 'N/A'}`)
+        .text(`Selected Employees: ${clockInLog.selectedEmployees || 'None'}`);
+    } else {
+      doc.fontSize(12).text('No clock-in log found for this shift.');
+    }
+    
+    doc.moveDown(2); // Space between sections
+
+    // Clock-out Section
+    doc.fontSize(16).text('Clock-Out Details', { underline: true });
+    doc.moveDown();
+
+    if (clockOutLog) {
+      doc.fontSize(12)
+        .text(`Date: ${clockOutLog.date}`)
+        .text(`Shift Number: ${clockOutLog.shiftNumber}`)
+        .text(`Exit Time: ${clockOutLog.time}`)
+        .text(`Issues: ${clockOutLog.issues || 'None'}`)
+        .text(`Remarks: ${clockOutLog.remarks || 'None'}`)
+        .text(`Oxygen: ${clockOutLog.oxygen || 'N/A'}`)
+        .text(`Methane: ${clockOutLog.methane || 'N/A'}`)
+        .text(`Monoxide: ${clockOutLog.monoxide || 'N/A'}`)
+        .text(`Ventilation: ${clockOutLog.ventilation || 'N/A'}`)
+        .text(`Integrity: ${clockOutLog.integrity || 'N/A'}`)
+        .text(`Selected Employees: ${clockOutLog.selectedEmployees || 'None'}`);
+    } else {
+      doc.fontSize(12).text('Shift not clocked out yet.');
+    }
 
     doc.end();
+
   } catch (error) {
-    console.error('Error fetching log entries:', error);
-    res.status(500).json({ error: 'Failed to fetch log entries' });
+    res.status(500).json({ error: 'Error generating PDF report' });
   }
 };
-
-export { saveLogEntry, printLogEntries };

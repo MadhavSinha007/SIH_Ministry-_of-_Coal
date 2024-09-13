@@ -1,18 +1,23 @@
 import pool from '../db.js';
 
-const createTable = async () => {
+const createShiftLogsTable = async () => {
   const client = await pool.connect();
   try {
     await client.query(`
-      CREATE TABLE IF NOT EXISTS logs (
+      CREATE TABLE IF NOT EXISTS shift_logs (
         id SERIAL PRIMARY KEY,
         date DATE,
         shiftNumber VARCHAR(10),
-        entryTime TIME,
-        exitTime TIME,
+        time TIME,
         issues TEXT,
         remarks TEXT,
-        selectedEmployees JSONB
+        oxygen NUMERIC, 
+        methane NUMERIC,
+        monoxide NUMERIC,
+        ventilation NUMERIC,
+        integrity NUMERIC,
+        selectedEmployees JSONB,
+        logType VARCHAR(10) CHECK (logType IN ('clock_in', 'clock_out'))
       );
     `);
   } finally {
@@ -20,29 +25,90 @@ const createTable = async () => {
   }
 };
 
-const saveLog = async (logData) => {
-  const { date, shiftNumber, entryTime, exitTime, issues, remarks, selectedEmployees } = logData;
+const saveShiftLog = async (logData) => {
+  const {
+    date,
+    shiftNumber,
+    time,
+    issues,
+    remarks,
+    oxygen,
+    methane,
+    monoxide,
+    ventilation,
+    integrity,
+    selectedEmployees,
+    logType 
+  } = logData;
+
+  const client = await pool.connect();
+  try {
+    const existingEntry = await client.query(
+      `SELECT * FROM shift_logs WHERE shiftNumber = $1 AND logType = $2`,
+      [shiftNumber, logType]
+    );
+
+    if (existingEntry.rows.length > 0) {
+      // Update the existing entry
+      const result = await client.query(
+        `UPDATE shift_logs
+         SET date = $1, time = $2, issues = $3, remarks = $4, oxygen = $5,
+             methane = $6, monoxide = $7, ventilation = $8, integrity = $9,
+             selectedEmployees = $10, updated_at = CURRENT_TIMESTAMP
+         WHERE shiftNumber = $11 AND logType = $12
+         RETURNING *`,
+        [date, time, issues, remarks, oxygen, methane, monoxide, ventilation, integrity, JSON.stringify(selectedEmployees), shiftNumber, logType]
+      );
+      return result.rows[0];
+    } else {
+      // Insert a new entry if none exists
+      const result = await client.query(
+        `INSERT INTO shift_logs (date, shiftNumber, time, issues, remarks, oxygen, methane, monoxide, ventilation, integrity, selectedEmployees, logType)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *`,
+        [date, shiftNumber, time, issues, remarks, oxygen, methane, monoxide, ventilation, integrity, JSON.stringify(selectedEmployees), logType]
+      );
+      return result.rows[0];
+    }
+  } catch (error) {
+    console.error('Error saving shift log:', error);
+    throw error;
+  } finally {
+    client.release();
+  }
+};
+
+// Function to get logs by shift number
+const getLogsByShiftNumber = async (shiftNumber) => {
   const client = await pool.connect();
   try {
     const result = await client.query(
-      `INSERT INTO logs (date, shiftNumber, entryTime, exitTime, issues, remarks, selectedEmployees)
-       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
-      [date, shiftNumber, entryTime, exitTime, issues, remarks, JSON.stringify(selectedEmployees)]
+      `SELECT * FROM shift_logs WHERE shiftNumber = $1 ORDER BY created_at DESC`,
+      [shiftNumber]
     );
-    return result.rows[0];
+    return result.rows;
+  } catch (error) {
+    console.error('Error getting logs by shift number:', error);
+    throw error;
   } finally {
     client.release();
   }
 };
 
-const getLatestLog = async () => {
+// Function to get the latest log entry for a specific shift number and log type
+const getLatestShiftLog = async (shiftNumber, logType) => {
   const client = await pool.connect();
   try {
-    const result = await client.query('SELECT * FROM logs ORDER BY id DESC LIMIT 1');
+    const result = await client.query(
+      `SELECT * FROM shift_logs WHERE shiftNumber = $1 AND logType = $2 ORDER BY created_at DESC LIMIT 1`,
+      [shiftNumber, logType]
+    );
     return result.rows[0];
+  } catch (error) {
+    console.error('Error getting latest shift log:', error);
+    throw error;
   } finally {
     client.release();
   }
 };
 
-export { createTable, saveLog, getLatestLog };
+export { createShiftLogsTable, saveShiftLog, getLogsByShiftNumber, getLatestShiftLog };

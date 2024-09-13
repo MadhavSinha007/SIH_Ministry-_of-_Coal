@@ -6,8 +6,8 @@ import HomePage from './pages/HomePage';
 import ShiftPage from './pages/ShiftPage';
 import Safety from './pages/Safety';
 import History from './pages/History';
-import EmployeeDetails from './components/EmployeeDetails'; // Import EmployeeDetails component
-import ShiftLogForm from './components/LogEntryForm'; // Import ShiftLogForm component
+import EmployeeDetails from './components/EmployeeDetails'; 
+import ShiftLogForm from './components/LogEntryForm'; 
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 
@@ -23,7 +23,7 @@ const backgroundImages = {
   "/shift": `url(${shiftBg})`,
   "/report": `url(${reportBg})`,
   "/history": `url(${historyBg})`,
-  "/": `url(${loginBg})`, // Default image
+  "/": `url(${loginBg})`, 
 };
 
 const FullScreenBackgroundContainer = styled(Box)(({ backgroundImage }) => ({
@@ -57,11 +57,11 @@ const AppRouter = () => {
       <Routes>
         <Route index element={<Login />} />
         <Route path="/dashboard" element={<HomePage />} />
-        <Route path="/shift" element={<ShiftPage />} />
-        <Route path="/report" element={<Safety />} />
+        <Route path="/clockin" element={<ShiftPage />} />
+        <Route path="/clockout" element={<Safety />} />
         <Route path="/history" element={<History />} />
-        <Route path="/employee/:id" element={<EmployeeDetails />} /> {/* Route for EmployeeDetails */}
-        <Route path="/shift-log" element={<ShiftLogForm />} /> {/* Route for ShiftLogForm */}
+        <Route path="/employee/:id" element={<EmployeeDetails />} />
+        <Route path="/shift-log" element={<ShiftLogForm />} /> 
       </Routes>
     </Box>
   );

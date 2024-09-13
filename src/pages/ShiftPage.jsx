@@ -1,6 +1,7 @@
 import React from 'react';
 import { styled } from "@mui/material/styles";
 import LogEntryForm from '../components/LogEntryForm';
+import PreForm from '../components/PreForm'
 
 const GlassBackgroundContainer = styled('div')(({ theme }) => ({
   backgroundColor: "rgba(255, 255, 255, 0.2)", // glass background color
@@ -15,7 +16,7 @@ const ShiftPage = () => {
   return (
     <GlassBackgroundContainer>
       <h1>Enter your Shift Details</h1>
-      <LogEntryForm />
+      <PreForm />
     </GlassBackgroundContainer>
   );
 };

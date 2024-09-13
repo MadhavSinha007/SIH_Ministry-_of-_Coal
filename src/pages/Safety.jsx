@@ -1,6 +1,7 @@
 import React from 'react';
 import { styled } from "@mui/material/styles";
 import MineSafetyCheck from "../components/MineSafetyCheck";
+import PostForm from "../components/PostForm";
 
 const GlassBackgroundContainer = styled('div')(({ theme }) => ({
   backgroundColor: "rgba(255, 255, 255, 0.2)", // glass background color
@@ -8,14 +9,14 @@ const GlassBackgroundContainer = styled('div')(({ theme }) => ({
   borderRadius: "10px", // rounded corners
   padding: "20px", // padding
   width: "80%", // width
-  margin: "40px auto", // center horizontally
+  margin: "40px auto", 
 }));
 
 const Safety = () => {
   return (
     <GlassBackgroundContainer>
-      <h1>Safety Measure </h1>
-      <MineSafetyCheck />
+      <h1>Enter your Shift Details</h1>
+      <PostForm />
     </GlassBackgroundContainer>
   );
 };
