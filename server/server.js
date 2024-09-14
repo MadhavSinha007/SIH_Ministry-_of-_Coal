@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import logRoutes from './routes/ShiftRoutes.js';
-import { createShiftLogsTable } from './models/ShiftModel.js'; // Update the path if needed
+import { createShiftLogsTable } from './models/ShiftModel.js';
 
 const app = express();
 const port = 8081;
@@ -10,20 +10,17 @@ const port = 8081;
 app.use(cors());
 app.use(bodyParser.json());
 
-// Set up the API routes
 app.use('/api', logRoutes);
 
-// Initialize the database table
 const initializeDatabase = async () => {
   try {
-    await createShiftLogsTable(); // Create shift_logs table
-    console.log('Database tables initialized.');
+    await createShiftLogsTable();
+    console.log('Database tables created successfully');
   } catch (error) {
     console.error('Error initializing database tables:', error);
   }
 };
 
-// Initialize the database tables when the server starts
 initializeDatabase();
 
 app.listen(port, () => {

@@ -8,7 +8,7 @@ const createShiftLogsTable = async () => {
         id SERIAL PRIMARY KEY,
         date DATE,
         shiftNumber VARCHAR(10),
-        time TIME,
+        time TEXT,
         issues TEXT,
         remarks TEXT,
         oxygen NUMERIC, 
@@ -26,6 +26,9 @@ const createShiftLogsTable = async () => {
 };
 
 const saveShiftLog = async (logData) => {
+  // Log the incoming data for debugging purposes
+  console.log('logData:', logData);
+
   const {
     date,
     shiftNumber,
@@ -54,7 +57,7 @@ const saveShiftLog = async (logData) => {
         `UPDATE shift_logs
          SET date = $1, time = $2, issues = $3, remarks = $4, oxygen = $5,
              methane = $6, monoxide = $7, ventilation = $8, integrity = $9,
-             selectedEmployees = $10, updated_at = CURRENT_TIMESTAMP
+             selectedEmployees = $10
          WHERE shiftNumber = $11 AND logType = $12
          RETURNING *`,
         [date, time, issues, remarks, oxygen, methane, monoxide, ventilation, integrity, JSON.stringify(selectedEmployees), shiftNumber, logType]
@@ -77,7 +80,6 @@ const saveShiftLog = async (logData) => {
   }
 };
 
-// Function to get logs by shift number
 const getLogsByShiftNumber = async (shiftNumber) => {
   const client = await pool.connect();
   try {
@@ -94,21 +96,4 @@ const getLogsByShiftNumber = async (shiftNumber) => {
   }
 };
 
-// Function to get the latest log entry for a specific shift number and log type
-const getLatestShiftLog = async (shiftNumber, logType) => {
-  const client = await pool.connect();
-  try {
-    const result = await client.query(
-      `SELECT * FROM shift_logs WHERE shiftNumber = $1 AND logType = $2 ORDER BY created_at DESC LIMIT 1`,
-      [shiftNumber, logType]
-    );
-    return result.rows[0];
-  } catch (error) {
-    console.error('Error getting latest shift log:', error);
-    throw error;
-  } finally {
-    client.release();
-  }
-};
-
-export { createShiftLogsTable, saveShiftLog, getLogsByShiftNumber, getLatestShiftLog };
+export { createShiftLogsTable, saveShiftLog, getLogsByShiftNumber };
