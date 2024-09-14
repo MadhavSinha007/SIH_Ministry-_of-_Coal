@@ -84,7 +84,7 @@ const getLogsByShiftNumber = async (shiftNumber) => {
   const client = await pool.connect();
   try {
     const result = await client.query(
-      `SELECT * FROM shift_logs WHERE shiftNumber = $1 ORDER BY created_at DESC`,
+      `SELECT * FROM shift_logs WHERE shiftNumber = $1`,
       [shiftNumber]
     );
     return result.rows;

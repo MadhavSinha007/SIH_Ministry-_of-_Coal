@@ -56,53 +56,90 @@ export const saveLogEntry = async (req, res) => {
 };
 
 
-export const printLogEntries = async (req, res) => {
-  const { shiftNumber } = req.query;
+export const printLogEntries = async (shiftNumber, res) => {
 
-  // Basic validation
-  if (!shiftNumber || typeof shiftNumber !== 'string') {
+  if (!shiftNumber) {
     return res.status(400).json({ error: 'Invalid input data' });
   }
 
-  // Log shift number request
   console.log('Fetching logs for shift number:', shiftNumber);
 
   try {
     const logs = await getLogsByShiftNumber(shiftNumber);
-
-    // Log the retrieved logs
     console.log('Retrieved logs:', logs);
 
     const doc = new PDFDocument();
     let buffers = [];
     
     doc.on('data', buffers.push.bind(buffers));
-    doc.on('end', () => {
+    doc.on('end', () => { 
       const pdfData = Buffer.concat(buffers);
       res.contentType('application/pdf');
       res.send(pdfData);
     });
-
+    
     doc.fontSize(16).text(`Shift Log Report for Shift Number: ${shiftNumber}`, { align: 'center' });
     doc.moveDown();
-
-    logs.forEach(log => {
-      doc.fontSize(12).text(`Date: ${log.date}`);
-      doc.fontSize(12).text(`Shift Number: ${log.shiftNumber}`);
-      doc.fontSize(12).text(`Time: ${log.time}`);
-      doc.fontSize(12).text(`Issues: ${log.issues}`);
-      doc.fontSize(12).text(`Remarks: ${log.remarks}`);
-      doc.fontSize(12).text(`Oxygen: ${log.oxygen}`);
-      doc.fontSize(12).text(`Methane: ${log.methane}`);
-      doc.fontSize(12).text(`Monoxide: ${log.monoxide}`);
-      doc.fontSize(12).text(`Ventilation: ${log.ventilation}`);
-      doc.fontSize(12).text(`Integrity: ${log.integrity}`);
-      doc.fontSize(12).text(`Selected Employees: ${JSON.stringify(log.selectedEmployees)}`);
-      doc.fontSize(12).text(`Log Type: ${log.logType}`);
-      doc.moveDown();
-    });
-
+    console.log("Logs:", logs);
+    
+    const formatDate = (date) => {
+      const d = new Date(date);
+      const day = (`0${d.getDate()}`).slice(-2);
+      const month = (`0${d.getMonth() + 1}`).slice(-2);
+      const year = d.getFullYear();
+      return `${day}/${month}/${year}`;
+    };
+    
+    const formatEmployees = (employees) => employees.join(', ');
+    
+    const createTable = (logs) => {
+      logs.forEach(log => {
+        doc.fontSize(12).text(`Date: ${formatDate(log.date)}`, {continued: true}).text(' ', {width: 100});
+        doc.fontSize(12).text(`Shift Number: ${log.shiftnumber}`, {continued: true}).text(' ', {width: 100});
+        doc.fontSize(12).text(`${log.logtype === 'clock_in' ? 'Entry' : 'Exit'} Time: ${log.time}`, {continued: true}).text(' ', {width: 100});
+        doc.fontSize(12).text(`Issues: ${log.issues}`, {continued: true}).text(' ', {width: 100});
+        doc.fontSize(12).text(`Remarks: ${log.remarks}`, {continued: true}).text(' ', {width: 100});
+        doc.fontSize(12).text(`Oxygen: ${log.oxygen}`, {continued: true}).text(' ', {width: 100});
+        doc.fontSize(12).text(`Methane: ${log.methane}`, {continued: true}).text(' ', {width: 100});
+        doc.fontSize(12).text(`Monoxide: ${log.monoxide}`, {continued: true}).text(' ', {width: 100});
+        doc.fontSize(12).text(`Ventilation: ${log.ventilation}`, {continued: true}).text(' ', {width: 100});
+        doc.fontSize(12).text(`Integrity: ${log.integrity}`, {continued: true}).text(' ', {width: 100});
+        doc.fontSize(12).text(`Present Employees: ${formatEmployees(log.selectedemployees)}`);
+        doc.moveDown();
+      });
+    };
+    
+    // Create Clock-in Log section
+    doc.fontSize(14).text('Clock-in Log', { underline: true });
+    doc.moveDown();
+    
+    const clockInLogs = logs.filter(log => log.logtype === 'clock_in');
+    console.log("Clock in data:", clockInLogs);
+    
+    if (clockInLogs.length > 0) {
+      createTable(clockInLogs);
+    } else {
+      doc.fontSize(12).text('No clock-in logs available.');
+    }
+    
+    doc.moveDown().moveDown();
+    doc.lineWidth(1).moveTo(50, doc.y).lineTo(550, doc.y).stroke();
+    doc.moveDown().moveDown();
+    
+    // Create Clock-out Log section
+    doc.fontSize(14).text('Clock-out Log', { underline: true });
+    doc.moveDown();
+    
+    const clockOutLogs = logs.filter(log => log.logtype === 'clock_out');
+    if (clockOutLogs.length > 0) {
+      createTable(clockOutLogs);
+    } else {
+      doc.fontSize(12).text('Shift still in progress');
+    }
+    
     doc.end();
+    
+
   } catch (error) {
     console.error('Error printing log entries:', error);
     res.status(500).json({ error: 'Error printing log entries', details: error.message });

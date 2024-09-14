@@ -37,4 +37,4 @@ Content-Type: application/json
 }
 
 ### Print Log Entries
-GET http://localhost:8081/api/print?shiftNumber=A1
+GET http://localhost:8081/api/print/A1
