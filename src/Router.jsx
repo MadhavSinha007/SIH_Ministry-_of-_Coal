@@ -3,8 +3,8 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Drawer from './components/Drawer';
 import Login from './pages/Login';
 import HomePage from './pages/HomePage';
-import ShiftPage from './pages/ShiftPage';
-import Safety from './pages/Safety';
+import CheckIn from './pages/CheckIn';
+import CheckOut from './pages/CheckOut';
 import History from './pages/History';
 import EmployeeDetails from './components/EmployeeDetails'; 
 import ShiftLogForm from './components/LogEntryForm'; 
@@ -17,6 +17,7 @@ import shiftBg from './assets/coalmine1.jpg';
 import reportBg from './assets/coalmine2.jpg';
 import historyBg from './assets/coalmine3.jpg';
 import loginBg from './assets/coalmine4.jpg';
+import { Padding } from '@mui/icons-material';
 
 const backgroundImages = {
   "/dashboard": `url(${dashboardBg})`,
@@ -27,11 +28,11 @@ const backgroundImages = {
 };
 
 const FullScreenBackgroundContainer = styled(Box)(({ backgroundImage }) => ({
-  position: 'absolute',
+  position: 'fixed',
   top: 0,
   left: 0,
   width: '100vw',
-  height: '100vh',
+  height: '100%',
   opacity: '70%',
   background: `${backgroundImage} no-repeat center center fixed`,
   backgroundSize: 'cover',
@@ -57,8 +58,8 @@ const AppRouter = () => {
       <Routes>
         <Route index element={<Login />} />
         <Route path="/dashboard" element={<HomePage />} />
-        <Route path="/clockin" element={<ShiftPage />} />
-        <Route path="/clockout" element={<Safety />} />
+        <Route path="/clockin" element={<CheckIn />} />
+        <Route path="/clockout" element={<CheckOut/>} />
         <Route path="/history" element={<History />} />
         <Route path="/employee/:id" element={<EmployeeDetails />} />
         <Route path="/shift-log" element={<ShiftLogForm />} /> 

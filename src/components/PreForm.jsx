@@ -3,7 +3,7 @@ import { TextField, MenuItem, Select, FormControl, InputLabel, Checkbox, FormCon
 import { useNavigate } from 'react-router-dom';
 import { saveLog, printLog } from '../axios';
 
-const ShiftLogForm = () => {
+const PreForm = () => {
   const [selectedEmployees, setSelectedEmployees] = useState([]);
   const [logEntry, setlogEntry] = useState({
     date: '',
@@ -214,4 +214,4 @@ const ShiftLogForm = () => {
   );
 };
 
-export default ShiftLogForm;
+export default PreForm;
