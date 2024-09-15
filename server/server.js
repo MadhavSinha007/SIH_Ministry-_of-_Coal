@@ -15,7 +15,7 @@ app.use('/api', logRoutes);
 const initializeDatabase = async () => {
   try {
     await createShiftLogsTable();
-    console.log('Database tables created successfully');
+    console.log('Database initialized successfully');
   } catch (error) {
     console.error('Error initializing database tables:', error);
   }

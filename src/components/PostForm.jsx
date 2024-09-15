@@ -8,7 +8,8 @@ const ShiftLogForm = () => {
   const [logEntry, setlogEntry] = useState({
     date: '',
     shiftNumber: '',
-    exitTime: '',
+    manager:'',
+    time: '',
     issues: '',
     remarks: '',
     oxygen: '',
@@ -16,7 +17,8 @@ const ShiftLogForm = () => {
     monoxide: '',
     ventilation: '',
     integrity: '',
-    selectedEmployees: []
+    selectedEmployees: [],
+    logType:'clock_out'
   });
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -40,7 +42,7 @@ const ShiftLogForm = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setLogEntry(prevEntry => ({
+    setlogEntry(prevEntry => ({
       ...prevEntry,
       [name]: value
     }));
@@ -57,25 +59,6 @@ const ShiftLogForm = () => {
       setSnackbarSeverity('error');
     }
     setSnackbarOpen(true);
-  };
-
-  const handlePrint = async () => {
-    try {
-      const response = await printLog(); // Ensure this function fetches the PDF correctly
-      const blob = new Blob([response.data], { type: 'application/pdf' });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'log-entries.pdf');
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url); // Clean up the URL object
-    } catch (error) {
-      setSnackbarMessage('Failed to fetch log entries.');
-      setSnackbarSeverity('error');
-      setSnackbarOpen(true);
-    }
   };
 
   const handleCloseSnackbar = () => {
@@ -113,13 +96,21 @@ const ShiftLogForm = () => {
           <TextField
             label="Exit Time"
             type="time"
-            name="exitTime"
-            value={logEntry.exitTime}
+            name="time"
+            value={logEntry.time}
             onChange={handleInputChange}
             InputLabelProps={{ shrink: true }}
             fullWidth
           />
         </Box>
+        <TextField
+          minRows={3}
+          placeholder="Manager Name"
+          name="manager"
+          value={logEntry.manager}
+          onChange={handleInputChange}
+          style={{ width: '100%', padding: '8px' }}
+        />
         <TextField
           minRows={3}
           placeholder="Issues Encountered"
@@ -176,7 +167,7 @@ const ShiftLogForm = () => {
           <TextField
           minRows={3}
           placeholder="Methane Level"
-          name="oxygen"
+          name="methane"
           value={logEntry.methane}
           onChange={handleInputChange}
           style={{ width: '100%', padding: '8px' }}
@@ -184,7 +175,7 @@ const ShiftLogForm = () => {
           <TextField
           minRows={3}
           placeholder="Carbon Monoxide Level"
-          name="oxygen"
+          name="monoxide"
           value={logEntry.monoxide}
           onChange={handleInputChange}
           style={{ width: '100%', padding: '8px' }}
@@ -192,7 +183,7 @@ const ShiftLogForm = () => {
           <TextField
           minRows={3}
           placeholder="Ventilation Level"
-          name="oxygen"
+          name="ventilation"
           value={logEntry.ventilation}
           onChange={handleInputChange}
           style={{ width: '100%', padding: '8px' }}
@@ -200,7 +191,7 @@ const ShiftLogForm = () => {
           <TextField
           minRows={3}
           placeholder="Structural Integrity Level"
-          name="oxygen"
+          name="integrity"
           value={logEntry.integrity}
           onChange={handleInputChange}
           style={{ width: '100%', padding: '8px' }}

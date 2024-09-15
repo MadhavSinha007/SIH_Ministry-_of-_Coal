@@ -1,11 +1,12 @@
-### Save InLog Entry
+###for saving clock-in form
 POST http://localhost:8081/api/save
 Content-Type: application/json
 
 {
   "date": "2024-09-14",
   "shiftNumber": "A1",
-  "time": "08:00:00",
+  "manager": "Manager 1",
+  "time": "10:00:00",
   "issues": "No issues",
   "remarks": "All good",
   "oxygen": 20.8,
@@ -17,13 +18,14 @@ Content-Type: application/json
   "logType": "clock_in"
 }
 
-### Save OutLog Entry
+###for saving clock-out form
 POST http://localhost:8081/api/save
 Content-Type: application/json
 
 {
   "date": "2024-09-14",
   "shiftNumber": "A1",
+  "manager": "Manager 1",
   "time": "16:00:00",
   "issues": "No issues",
   "remarks": "All good",
@@ -36,5 +38,8 @@ Content-Type: application/json
   "logType": "clock_out"
 }
 
-### Print Log Entries
+###for getting minimal data
+GET http://localhost:8081/api/preview
+
+###for printing the pdf
 GET http://localhost:8081/api/print/A1

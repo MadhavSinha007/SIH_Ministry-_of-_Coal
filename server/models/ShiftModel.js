@@ -8,6 +8,7 @@ const createShiftLogsTable = async () => {
         id SERIAL PRIMARY KEY,
         date DATE,
         shiftNumber VARCHAR(10),
+        manager TEXT,
         time TEXT,
         issues TEXT,
         remarks TEXT,
@@ -26,12 +27,10 @@ const createShiftLogsTable = async () => {
 };
 
 const saveShiftLog = async (logData) => {
-  // Log the incoming data for debugging purposes
-  console.log('logData:', logData);
-
   const {
     date,
     shiftNumber,
+    manager,
     time,
     issues,
     remarks,
@@ -55,20 +54,20 @@ const saveShiftLog = async (logData) => {
       // Update the existing entry
       const result = await client.query(
         `UPDATE shift_logs
-         SET date = $1, time = $2, issues = $3, remarks = $4, oxygen = $5,
-             methane = $6, monoxide = $7, ventilation = $8, integrity = $9,
-             selectedEmployees = $10
-         WHERE shiftNumber = $11 AND logType = $12
+         SET date = $1, manager = $2, time = $3, issues = $4, remarks = $5, oxygen = $6,
+             methane = $7, monoxide = $8, ventilation = $9, integrity = $10,
+             selectedEmployees = $11
+         WHERE shiftNumber = $12 AND logType = $13
          RETURNING *`,
-        [date, time, issues, remarks, oxygen, methane, monoxide, ventilation, integrity, JSON.stringify(selectedEmployees), shiftNumber, logType]
+        [date, manager, time, issues, remarks, oxygen, methane, monoxide, ventilation, integrity, JSON.stringify(selectedEmployees), shiftNumber, logType]
       );
       return result.rows[0];
     } else {
       // Insert a new entry if none exists
       const result = await client.query(
-        `INSERT INTO shift_logs (date, shiftNumber, time, issues, remarks, oxygen, methane, monoxide, ventilation, integrity, selectedEmployees, logType)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING *`,
-        [date, shiftNumber, time, issues, remarks, oxygen, methane, monoxide, ventilation, integrity, JSON.stringify(selectedEmployees), logType]
+        `INSERT INTO shift_logs (date, shiftNumber, manager, time, issues, remarks, oxygen, methane, monoxide, ventilation, integrity, selectedEmployees, logType)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *`,
+        [date, shiftNumber, manager, time, issues, remarks, oxygen, methane, monoxide, ventilation, integrity, JSON.stringify(selectedEmployees), logType]
       );
       return result.rows[0];
     }

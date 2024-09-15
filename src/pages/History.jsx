@@ -1,5 +1,5 @@
 import React from "react";
-import ShiftLogHistory from "./ShiftLogPDF";
+import HistoryComp from "./HistoryComp";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 
@@ -15,8 +15,8 @@ const GlassBackgroundContainer = styled(Box)(({ theme }) => ({
 const History = () => {
   return (
     <GlassBackgroundContainer>
-      <h1>Previous Shifts</h1>
-      <ShiftLogHistory />
+      <h1>Shift Logs</h1>
+      <HistoryComp />
     </GlassBackgroundContainer>
   );
 };

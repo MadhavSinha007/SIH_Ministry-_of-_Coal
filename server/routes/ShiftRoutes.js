@@ -1,17 +1,13 @@
 import express from 'express';
-import { saveLogEntry, printLogEntries } from '../controllers/ShiftController.js';
+import { saveLogEntry, printLogEntries, getPreview } from '../controllers/ShiftController.js';
 
 const router = express.Router();
 
+//Saves form data to table
 router.post('/save', async (req, res) => {
   try {
-    console.log("the router function for save works");
-    
-    const logData = req.body;
-    console.log(logData);
-    
+    const logData = req.body;    
     const savedLog = await saveLogEntry(req,res); 
-    console.log("Saved log\n",savedLog);
     
     res.status(200).json(savedLog);
   } catch (error) {
@@ -19,6 +15,16 @@ router.post('/save', async (req, res) => {
   }
 });
 
+//Fetches data for the history page
+router.get('/preview', async (req, res) => {
+  try {
+    await getPreview(req, res);
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching shifts preview' });
+  }
+});
+
+//Generates the pdf and streams to client
 router.get('/print/:shiftNumber', async (req, res) => {
   const { shiftNumber } = req.params;
   
