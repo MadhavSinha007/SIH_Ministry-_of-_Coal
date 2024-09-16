@@ -32,20 +32,23 @@ export const saveLogEntry = async (req, res) => {
 
 //for /api/preview
 export const getPreview = async (req, res) => {
-    
+  let client;
   try {
-    const client = await pool.connect();    
+    client = await pool.connect();    
     const result = await client.query(
-      `SELECT shiftNumber, manager, date FROM shift_logs;`
+      `SELECT DISTINCT ON (shiftNumber) shiftNumber, manager, date FROM shift_logs ORDER BY shiftNumber, date;`
     );    
-    res.status(200).json(result.rows); 
+    return res.status(200).json(result.rows); 
   } catch (error) {
     console.error('Error fetching shifts preview:', error);
-    res.status(500).json({ error: 'Error fetching shifts preview', details: error.message });
+    return res.status(500).json({ error: 'Error fetching shifts preview', details: error.message });
   } finally {
-    client.release();
+    if (client) {
+      client.release();
+    }
   }
 };
+
 
 //for /api/save
 export const printLogEntries = async (shiftNumber, res) => {

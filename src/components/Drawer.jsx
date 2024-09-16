@@ -21,8 +21,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import ArticleIcon from '@mui/icons-material/Article';
 import ReportIcon from '@mui/icons-material/Report';
 import HistoryIcon from '@mui/icons-material/History';
-import { Height } from '@mui/icons-material';
-import { color } from 'chart.js/helpers';
+import { Checklist, ChecklistRtl } from '@mui/icons-material';
 
 const drawerWidth = 340;
 
@@ -149,7 +148,7 @@ export default function MiniDrawer() {
         </DrawerHeader>
         <Divider />
         <List>
-          {[{name:'Dashboard', icon:<HomeIcon/>, link:'/dashboard'}, {name:'Shift Clock-In',icon:<ArticleIcon/>,link:'/clockin'}, {name:'Shift Clock-Out', icon:<ReportIcon/>,link:'/clockout'}, {name:'History',icon:<HistoryIcon/>,link:'/history'}].map((page) => (
+          {[{name:'Dashboard', icon:<HomeIcon/>, link:'/dashboard'}, {name:'Shift Clock-In',icon:<ArticleIcon />,link:'/clockin'}, {name:'Shift Clock-Out', icon:<Checklist />,link:'/clockout'}, {name:'History',icon:<HistoryIcon/>,link:'/history'}].map((page) => (
             <ListItem key={page.name} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 component={Link}

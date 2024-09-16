@@ -18,6 +18,8 @@ const HistoryComp = () => {
 
     fetchShifts();
   }, []);
+  
+  console.log(shifts);
 
   const handleShiftSelection = (number) => {
     setSelectedShift(selectedShift === number ? null : number);
@@ -50,17 +52,17 @@ const HistoryComp = () => {
       </Typography>
       <Grid2 container spacing={3}>
         {shifts.map((shift) => (
-          <Grid2 item xs={12} sm={6} md={4} key={shift.number}>
+          <Grid2 item xs={12} sm={6} md={4} key={shift.shiftnumber}>
             <Box
               p={2}
               border={1}
               borderColor="grey.300"
               borderRadius={2}
-              bgcolor={selectedShift === shift.number ? 'lightblue' : 'inherit'}
-              onClick={() => handleShiftSelection(shift.number)}
+              bgcolor={selectedShift === shift.shiftnumber ? 'lightblue' : 'inherit'}
+              onClick={() => handleShiftSelection(shift.shiftnumber)}
               style={{ cursor: 'pointer' }}
             >
-              <Typography variant="h6">Shift Number: {shift.number}</Typography>
+              <Typography variant="h6">Shift Number: {shift.shiftnumber}</Typography>
               <Typography>Manager Name: {shift.manager}</Typography>
             </Box>
           </Grid2>

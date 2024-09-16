@@ -2,7 +2,9 @@ import axios from 'axios';
 
 const api = axios.create({
   baseURL: 'http://localhost:8081/api', 
-  responseType: 'arraybuffer'
+  headers: {
+    'Content-Type': 'application/json',
+  }
 });
 
 export const saveLog = async (logEntry) => {
@@ -15,7 +17,7 @@ export const saveLog = async (logEntry) => {
 
 export const printLog = async (shiftNumber) => {
   try {
-    const response = await api.get(`/print/${shiftNumber}`);
+    const response = await api.get(`/print/${shiftNumber}`,{responseType: 'arraybuffer'});
     return response; 
   } catch (error) {
     console.error('Error fetching log entries:', error);
@@ -25,7 +27,6 @@ export const printLog = async (shiftNumber) => {
 export const fetchPreview = async () => {
   try {
     const response = await api.get('/preview');
-    console.log(response.data);
     return response.data; 
   } catch (error) {
     console.error('Error fetching shifts preview:', error);

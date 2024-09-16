@@ -4,8 +4,8 @@ Content-Type: application/json
 
 {
   "date": "2024-09-14",
-  "shiftNumber": "A1",
-  "manager": "Manager 1",
+  "shiftNumber": "A2",
+  "manager": "Manager 2",
   "time": "10:00:00",
   "issues": "No issues",
   "remarks": "All good",
